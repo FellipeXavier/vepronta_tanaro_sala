@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    
+    <style>
+      body { margin: 0; overflow: hidden; }
+      #scanning-overlay {
+        position: absolute; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.7); display: flex;
+        justify-content: center; align-items: center;
+        color: white; font-family: sans-serif; z-index: 2;
+        text-align: center;
+      }
+      .hidden { display: none; }
+    </style>
+  </head>
+
+  <body>
+    <div id="scanning-overlay">
+      <div>Aponte para a logo da VePronta na parede...</div>
+    </div>
+
+    <a-scene 
+      mindar-image="imageTargetSrc: https://raw.githubusercontent.com/FellipeXavier/vepronta_escritorio_buranelli/main/targets.mind;" 
+      color-space="sRGB" 
+      renderer="colorManagement: true, physicallyCorrectLights" 
+      vr-mode-ui="enabled: false" 
+      device-orientation-permission-ui="enabled: false">
+      
+      <a-assets>
+        <a-asset-item id="escritorioModel" src="https://raw.githubusercontent.com/FellipeXavier/vepronta_escritorio_buranelli/main/ESCRITORIO.glb"></a-asset-item>
+      </a-assets>
+
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity mindar-image-target="targetIndex: 0">
+        <a-gltf-model 
+          src="#escritorioModel" 
+          position="0 0 0" 
+          rotation="0 0 0" 
+          scale="1 1 1">
+        </a-gltf-model>
+      </a-entity>
+      
+    </a-scene>
+
+    <script>
+      const sceneEl = document.querySelector('a-scene');
+      const overlay = document.querySelector('#scanning-overlay');
+      
+      // Quando a logo é reconhecida, o aviso some
+      sceneEl.addEventListener("targetFound", () => {
+        overlay.classList.add("hidden");
+      });
+      
+      // Se perder o sinal da logo, o aviso volta
+      sceneEl.addEventListener("targetLost", () => {
+        overlay.classList.remove("hidden");
+      });
+    </script>
+  </body>
+</html>
