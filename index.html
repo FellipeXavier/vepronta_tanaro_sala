@@ -3,59 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VePronta - Escritório Buranelli</title>
+    <title>VePronta - Visão Padrão</title>
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
-    
     <style>
-        body { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; }
-        model-viewer {
-            width: 100%;
-            height: 100%;
-            background-color: #e0e0e0;
+        body { margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden; font-family: sans-serif; }
+        model-viewer { width: 100%; height: 100%; background-color: #f0f0f0; }
+        .instruction-card {
+            position: absolute; top: 20px; left: 50%; transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8); color: white; padding: 12px 20px;
+            border-radius: 12px; font-size: 14px; text-align: center; z-index: 1000; display: none;
         }
         #ar-button {
-            background-color: #007bff; /* Azul para destacar bem */
-            color: white;
-            border-radius: 30px; /* Mais arredondado, estilo app moderno */
-            border: none;
-            padding: 15px 30px;
-            position: absolute;
-            bottom: 15%; /* Subiu para 15% da altura da tela */
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: sans-serif;
-            font-size: 16px;
-            font-weight: bold;
-            box-shadow: 0px 6px 15px rgba(0,0,0,0.4);
-            z-index: 1000;
-            cursor: pointer;
-            white-space: nowrap; /* Impede o texto de quebrar linha */
-        }
-        #ar-button:active {
-            background-color: #0056b3;
+            background-color: #007bff; color: white; border-radius: 30px; border: none;
+            padding: 15px 35px; position: absolute; bottom: 10%; left: 50%;
+            transform: translateX(-50%); font-weight: bold; z-index: 1000;
         }
     </style>
 </head>
 <body>
-
     <model-viewer 
         src="https://raw.githubusercontent.com/FellipeXavier/vepronta_tanaro_sala/main/tanaro.glb"
-        ar
-        ar-modes="scene-viewer quick-look webxr"
-        ar-scale="auto"
-        ar-placement="floor"
-        camera-controls
-        shadow-intensity="1"
-        shadow-softness="0.5"
-        environment-image="legacy"
-        exposure="1"
-        touch-action="pan-y">
+        ar ar-modes="scene-viewer quick-look webxr"
+        ar-scale="fixed" ar-placement="floor"
+        camera-controls shadow-intensity="1.5" shadow-softness="0.5" exposure="1.2"
+        environment-image="legacy" touch-action="pan-y">
         
-        <button slot="ar-button" id="ar-button">
-             🏢 VER EM TAMANHO REAL
-        </button>
-
+        <div class="instruction-card" slot="ar-button-overlay">
+            📍 Alinhe a folha virtual com a folha no chão.<br>
+            🔄 Use dois dedos apenas para GIRAR o projeto.
+        </div>
+        <button slot="ar-button" id="ar-button">🏢 ABRIR VISÃO PADRÃO</button>
     </model-viewer>
 
+    <script>
+        const viewer = document.querySelector("model-viewer");
+        const instruction = document.querySelector(".instruction-card");
+        viewer.addEventListener("ar-status", (event) => {
+            instruction.style.display = event.detail.status === "session-started" ? "block" : "none";
+        });
+    </script>
 </body>
 </html>
